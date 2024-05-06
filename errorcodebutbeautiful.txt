@@ -1,0 +1,43 @@
+/// @brief Calculate the next world state based on the current world state
+        void calculateNextWorld(){
+            for(int i = 0; i < HORIZONTAL_CELL_COUNT; i++){
+                for(int j = 0; j < VERTICAL_CELL_COUNT; j++){
+                    /// - Any live cell with fewer than two live neighbors dies, as if by underpopulation.
+                    /// - Any live cell with two or three live neighbors lives on to the next generation.
+                    /// - Any live cell with more than three live neighbors dies, as if by overpopulation.
+                    /// - Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+
+                    bool currentCellState = world[i][j];
+                    int livingNeighbours = 0;
+
+                    for(int x = -1; x <= 1; x++){
+                        for (int y = -1; y <= 1; y++){
+                            int actualX = ((i + x) + HORIZONTAL_CELL_COUNT) % (HORIZONTAL_CELL_COUNT);
+                            int actualY = ((j + y) + VERTICAL_CELL_COUNT) % VERTICAL_CELL_COUNT;
+                            world[actualX][actualY] ? livingNeighbours++ : NULL;
+                        }
+                    }
+
+                    if(!currentCellState){
+                        /// - Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+                        if(livingNeighbours == 3){
+                            nextWorld[i][j] = false;
+                            continue;
+                        }
+                    }
+
+                    if(livingNeighbours < 2){
+                        /// - Any live cell with fewer than two live neighbors dies, as if by underpopulation.
+                        nextWorld[i][j] = false;
+                    }
+                    if(livingNeighbours == 2 || livingNeighbours == 3){
+                        /// - Any live cell with two or three live neighbors lives on to the next generation
+                        nextWorld[i][j] = true;
+                    }
+                    if(livingNeighbours > 3){
+                        /// - Any live cell with more than three live neighbors dies, as if by overpopulation.
+                        nextWorld[i][j] = false;
+                    }
+                }
+            }
+        }
