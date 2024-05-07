@@ -4,7 +4,8 @@
 #include <raylib.h>
 
 #define SCREEN_WIDTH 600
-#define SCREEN_HEIGHT 600
+#define SCREEN_HEIGHT 620
+#define BUFFER_HEIGHT 20
 #define CELL_SIZE 10
 #define SWAP_FREQUENCY 50
 

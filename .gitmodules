@@ -4,3 +4,12 @@
 [submodule "lib/raygui"]
 	path = lib/raygui
 	url = https://github.com/raysan5/raygui
+[submodule "lib/rlImGui"]
+	path = lib/rlImGui
+	url = https://github.com/raylib-extras/rlImGui.git
+[submodule "lib/imgui"]
+	path = lib/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "lib/imgui-filebrowser"]
+	path = lib/imgui-filebrowser
+	url = https://github.com/AirGuanZ/imgui-filebrowser
