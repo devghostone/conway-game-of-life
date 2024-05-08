@@ -13,3 +13,6 @@
 [submodule "lib/imgui-filebrowser"]
 	path = lib/imgui-filebrowser
 	url = https://github.com/AirGuanZ/imgui-filebrowser
+[submodule "lib/libtinyfiledialogs"]
+	path = lib/libtinyfiledialogs
+	url = https://github.com/native-toolkit/libtinyfiledialogs.git

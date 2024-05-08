@@ -1,5 +1,4 @@
-#ifndef GAME_CONFIG_HPP
-#define GAME_CONFIG_HPP
+#pragma once
 
 #include <raylib.h>
 
@@ -19,4 +18,7 @@
 #define LIGHT_THEME_FOREGROUND BLACK
 #define LIGHT_THEME_TEXT (Color){0x80, 0x80, 0x80, 0xff}
 
-#endif
+#define FILE_EXTENSION "*.gocgof"
+
+const int HORIZONTAL_CELL_COUNT = (SCREEN_WIDTH / CELL_SIZE);
+const int VERTICAL_CELL_COUNT = ((SCREEN_HEIGHT - BUFFER_HEIGHT) / CELL_SIZE);
