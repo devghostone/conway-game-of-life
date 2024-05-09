@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <title>GhostOne's Conway's Game of Life</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="600" height="620"></canvas>
+    <input type="file" id="fileInput" accept=".gocgol" onchange="loadFile()" hidden>
+    <script>
+      // Create a WebAssembly module instance
+      var Module = {
+        canvas: document.getElementById('canvas'),
+        preRun: [],
+        postRun: [],
+        print: (function() {
+          var element = document.createElement('div');
+          element.setAttribute('id', 'output');
+          return function(text) {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            element.innerHTML += text + '<br>';
+          }
+        })(),
+        printErr: function(text) {
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          console.error(text);
+        }
+      };
+    </script>
+    <script src="file_manager.js"></script>
+    <script async="" src="game_of_life.js"></script>
+  
+</body></html>

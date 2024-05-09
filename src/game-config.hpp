@@ -18,7 +18,8 @@
 #define LIGHT_THEME_FOREGROUND BLACK
 #define LIGHT_THEME_TEXT (Color){0x80, 0x80, 0x80, 0xff}
 
-#define FILE_EXTENSION "*.gocgof"
+#define FILE_PATTERN "*.gocgol"
+#define FILE_EXT ".gocgol"
 
 const int HORIZONTAL_CELL_COUNT = (SCREEN_WIDTH / CELL_SIZE);
 const int VERTICAL_CELL_COUNT = ((SCREEN_HEIGHT - BUFFER_HEIGHT) / CELL_SIZE);

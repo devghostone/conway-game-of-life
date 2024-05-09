@@ -18,6 +18,7 @@ class ConwayGameWorld
         bool world[HORIZONTAL_CELL_COUNT][VERTICAL_CELL_COUNT];
         bool nextWorld[HORIZONTAL_CELL_COUNT][VERTICAL_CELL_COUNT];
         bool isSimulating = false;
+        bool isInteractable = true;
 
         ConwayGameWorld();
 

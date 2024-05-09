@@ -111,7 +111,8 @@ void ConwayGameWorld::render(Color unitColor)
         {
             if (world[i][j])
             {
-                DrawRectangle(i * CELL_SIZE, (j * CELL_SIZE) + BUFFER_HEIGHT, CELL_SIZE, CELL_SIZE, unitColor);
+                DrawRectangleRounded((Rectangle){static_cast<float>(i * CELL_SIZE), static_cast<float>((j * CELL_SIZE) + BUFFER_HEIGHT), CELL_SIZE, CELL_SIZE}, 50, 10, unitColor);
+                //DrawRectangle(i * CELL_SIZE, (j * CELL_SIZE) + BUFFER_HEIGHT, CELL_SIZE, CELL_SIZE, unitColor);
             }
         }
     }
@@ -126,7 +127,7 @@ string ConwayGameWorld::generateCurrentSnapShot()
         {
             if (world[i][j])
             {
-                char buffer[6];
+                char buffer[7];
                 sprintf(buffer, "%d,%d\n", i, j);
                 worldSnapshot.append(buffer);
             }

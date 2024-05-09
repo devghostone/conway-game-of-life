@@ -10,10 +10,10 @@ set(RLIMGUI_PATH "lib/rlImGui")
 
 project(game_of_life)
 
-include_directories(lib/raylib/src src lib/raygui/src lib/libtinyfiledialogs)
+include_directories(lib/raylib/src src src/file_manager lib/raygui/src lib/libtinyfiledialogs)
 
 add_executable(game_of_life src/main.cpp)
-add_library(file_manager STATIC src/file_manager.cpp)
+add_library(file_manager STATIC src/file_manager/file_manager.cpp)
 add_library(game_of_life_lib STATIC src/game-of-life.cpp)
 
 file(GLOB IMGUI_SOURCES ${IMGUI_PATH}/*.cpp)
@@ -26,11 +26,13 @@ target_include_directories("ImGui" PUBLIC ${IMGUI_PATH})
 target_include_directories("rlImGui" PUBLIC ${RLIMGUI_PATH} ${IMGUI_PATH})
 
 if (EMSCRIPTEN)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s ASYNCIFY -sALLOW_MEMORY_GROWTH")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s ASYNCIFY=1 -sALLOW_MEMORY_GROWTH -s EXPORTED_FUNCTIONS=_fileLoadCompleted,_main -s EXPORTED_RUNTIME_METHODS=FS,ccall --bind --memory")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
     find_library(RL_LIBRARY NAMES raylib PATHS lib/raylib/src NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
     target_link_libraries(game_of_life ${raylib})
+    file(COPY ${CMAKE_SOURCE_DIR}/src/file_manager/file_manager.js DESTINATION ${CMAKE_BINARY_DIR})
+    file(COPY ${CMAKE_SOURCE_DIR}/src/index.html DESTINATION ${CMAKE_BINARY_DIR})
     #set_target_properties(game_of_life PROPERTIES LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/resources/audio@resources/audio")
 else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")

@@ -12,6 +12,8 @@
 
 using std::string;
 
+static char filename[100] = "";
+
 class GameColorTheme
 {
     enum Theme
@@ -86,13 +88,15 @@ public:
 
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            int x = GetMouseX() / CELL_SIZE;
-            int y = (GetMouseY() - BUFFER_HEIGHT) / CELL_SIZE;
-            if (y < 0)
-            {
-                return;
+            if(gameWorld.isInteractable){
+                int x = GetMouseX() / CELL_SIZE;
+                int y = (GetMouseY() - BUFFER_HEIGHT) / CELL_SIZE;
+                if (y < 0)
+                {
+                    return;
+                }
+                gameWorld.world[x][y] = !gameWorld.world[x][y];
             }
-            gameWorld.world[x][y] = !gameWorld.world[x][y];
         }
     }
 };
@@ -123,9 +127,7 @@ class GuiManager
 
     bool showControlsScreen = false;
     bool showAboutScreen = false;
-    bool showOpenFileBrowser = false;
     bool showSaveAsFileBrowser = false;
-
 public:
     GuiManager(ConwayGameWorld *gameWorld)
     {
@@ -134,39 +136,49 @@ public:
 
     void render()
     {
+        gameWorld->isInteractable = true;
         rlImGuiBegin();
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("File"))
-            {
+            {   
+                gameWorld->isInteractable = false;
                 if (ImGui::MenuItem("New"))
                 {
                     *gameWorld = ConwayGameWorld();
                 }
-                if (ImGui::MenuItem("Open", "Ctrl+O"))
+                if (ImGui::MenuItem("Open"))
                 {
-                    FileDialog fileOpenDialog = FileDialog("Open Game Of Life File", FileDialog::FileDialogType::Open, FILE_EXTENSION);
+                    FileDialog fileOpenDialog = FileDialog("Open Game Of Life File", FileDialog::FileDialogType::Open, FILE_PATTERN, FILE_EXT);
                     string filePath = fileOpenDialog.OpenDialog();
                     if(filePath != ""){
+                        #ifdef __EMSCRIPTEN__
+                        gfle = FileLoadCompletionEvent([filePath, this](){
+                            *this->gameWorld = ConwayGameWorld(FileManager::LoadFromFile(filePath));
+                        }); 
+                        #else
                         *gameWorld = ConwayGameWorld(FileManager::LoadFromFile(filePath));
+                        #endif
                     }
                 }
-                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                if (ImGui::MenuItem("Save"))
                 {
-                }
-                if (ImGui::MenuItem("Save as.."))
-                {
-                    FileDialog fileSaveAsDialog = FileDialog("Save as Game Of Life File", FileDialog::FileDialogType::SaveAs, FILE_EXTENSION);
+                    #ifdef __EMSCRIPTEN__
+                    showSaveAsFileBrowser = true;
+                    #else
+                    FileDialog fileSaveAsDialog = FileDialog("Save as Game Of Life File", FileDialog::FileDialogType::SaveAs, FILE_PATTERN, FILE_EXT);
                     string filePath = fileSaveAsDialog.OpenDialog();
                     if(filePath != ""){
                         FileManager::SaveToFile(filePath, gameWorld->generateCurrentSnapShot());
                     }
+                    #endif
                 }
                 ImGui::EndMenu();
             }
 
             if (ImGui::BeginMenu("Help"))
             {
+                gameWorld->isInteractable = false;
                 if (ImGui::MenuItem("Controls"))
                 {
                     showControlsScreen = true;
@@ -188,6 +200,7 @@ public:
                 ImGui::Text("Enter - Start Simulation");
                 ImGui::Text("Space - Change Theme");
                 ImGui::End();
+                gameWorld->isInteractable = false;
             }
 
             if (showAboutScreen)
@@ -200,6 +213,22 @@ public:
                 {
                 }
                 ImGui::End();
+                gameWorld->isInteractable = false;
+            }
+
+            if(showSaveAsFileBrowser){
+                ImGui::SetNextWindowSize(ImVec2(200, 200));
+                ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+                ImGui::Begin("Download Config", &showSaveAsFileBrowser, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+                ImGui::InputText("Name", filename, IM_ARRAYSIZE(filename));
+                if (ImGui::Button("Download", ImVec2(100, 20)))
+                {
+                    //std::cout << gameWorld -> generateCurrentSnapShot() << std::endl;
+                    FileManager::DownloadFileMEMFSToDisk(filename, FILE_EXT, gameWorld->generateCurrentSnapShot());
+                    showSaveAsFileBrowser = false;
+                }
+                ImGui::End();
+                gameWorld->isInteractable = false;
             }
         }
         rlImGuiEnd();
