@@ -10,3 +10,26 @@ Conway Game of Life is a classic simulation game where the cells follow by four 
 Albeit being simple when left alone in the right condition, the placement of cells produce insanely mesmerizing patterns.
 
 In this particular project, I will implement hard boundaries in the sense that the simulation will wrap around from one border from the right to the border to the left.
+
+The plan is also to make the project works on multiple platforms (Desktop OSes and Web)
+
+You can try it out on [itch.io](https://dreamerghostone.itch.io/conway-game-of-life)
+
+## Controls
+
+- LMB - Place/Delete Cell
+- Enter - Start Simulation
+- Space - Change Theme
+
+### File Menu
+- New - Create a new File
+- Open - Open a configuration
+- Save - Save current configuration (will download a file)
+
+## Tools and Frameworks Used
+
+- C++
+- Raylib
+- ImGUI
+- TinyFileDialogs
+- Emscripten
